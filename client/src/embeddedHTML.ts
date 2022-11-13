@@ -120,6 +120,5 @@ export function unpackDocumentSymbolChildren(symbol: DocumentSymbol): DocumentSy
 	if (symbol.children.length > 0) {
 		symbol.children.forEach(s => result = result.concat(unpackDocumentSymbolChildren(s)));
 	}
-	console.debug(result);
 	return result;
 }

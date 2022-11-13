@@ -50,7 +50,7 @@ export function activate(context: ExtensionContext) {
 
 		virtualDocumentContents.set(vUri.toString(), getHTMLVirtualContent(document.getText()));
 		// virtualDocumentContents.set(vUri.toString(), "<div></div > ");
-		console.debug(virtualDocumentContents);
+		// console.debug(virtualDocumentContents);
 		return vUri;
 	}
 
@@ -76,6 +76,20 @@ export function activate(context: ExtensionContext) {
 				result.items = result.items.filter((i) => !i.label.toString().match(/aria-.*/g));
 
 				console.debug(result);
+				return result;
+			},
+			async prepareRename(document, position, token, next) {
+				// If not in `html! {}`, do not perform request forwarding
+				if (!isInsideHTMLRegion(document.getText(), document.offsetAt(position))) {
+					return await next(document, position, token);
+				}
+				console.log("doing prepare rename!");
+
+				const result = await commands.executeCommand<any>(
+					'vscode.prepareRename',
+					vdocUri(document),
+					position
+				);
 				return result;
 			},
 			async provideRenameEdits(document, position, newName, token, next) {
@@ -127,7 +141,6 @@ export function activate(context: ExtensionContext) {
 				}
 				let answer: DocumentSymbol[] = [];
 				result.forEach(s => answer = answer.concat(unpackDocumentSymbolChildren(s)));
-				console.debug(answer);
 				return answer;
 			}
 		}

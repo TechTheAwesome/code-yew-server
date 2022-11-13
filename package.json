@@ -28,7 +28,7 @@
 	"contributes": {
 		"languages": [
 			{
-				"id": "rust",
+				"id": "rustyew",
 				"aliases": [
 					"Rust Yew",
 					"Rust"
